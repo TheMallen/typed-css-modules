@@ -43,11 +43,11 @@ let main = () => {
     return;
   }
 
-  if(argv._ && argv._[0]) {
+  if (argv._ && argv._[0]) {
     searchDir = argv._[0];
-  }else if(argv.p) {
+  } else if(argv.p) {
     searchDir = './';
-  }else{
+  } else {
     yarg.showHelp();
     return;
   }
@@ -55,16 +55,16 @@ let main = () => {
   rootDir = process.cwd();
   creator = new DtsCreator({rootDir, searchDir, outDir: argv.o, camelCase: argv.c});
 
-  if(!argv.w) {
+  if (!argv.w) {
     glob(filesPattern, null, (err, files) => {
-      if(err) {
+      if (err) {
         console.error(err);
         return;
       }
-      if(!files || !files.length) return;
+      if (!files || !files.length) return;
       files.forEach(writeFile);
     });
-  }else{
+  } else {
     console.log('Watch ' + filesPattern + '...');
     gaze(filesPattern, function(err, files) {
       this.on('changed', writeFile);

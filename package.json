@@ -1,5 +1,5 @@
 {
-  "name": "typed-css-modules",
+  "name": "friendly-typed-css-modules",
   "version": "0.1.13",
   "description": "Creates .d.ts files from CSS Modules .css files",
   "main": "index.js",
@@ -12,13 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Quramy/typed-css-modules.git"
+    "url": "https://github.com/TheMallen/typed-css-modules.git"
   },
   "keywords": [
     "css-modules",
     "typescript"
   ],
-  "author": "quramy",
+  "author": "themallen",
   "license": "MIT",
   "dependencies": {
     "camelcase": "^3.0.0",

@@ -1,8 +1,10 @@
-# typed-css-modules [![Build Status](https://travis-ci.org/Quramy/typed-css-modules.svg?branch=master)](https://travis-ci.org/Quramy/typed-css-modules) [![npm version](https://badge.fury.io/js/typed-css-modules.svg)](http://badge.fury.io/js/typed-css-modules)
+# friendly-typed-css-modules
+This is a fork of [Typed-CSS-Modules](https://github.com/Quramy/typed-css-modules), aimed at providing some nicer functionality
+for usign programmatic class names against your typed css.
 
 Creates TypeScript definition files from [CSS Modules](https://github.com/css-modules/css-modules) .css files.
 
-If you have the following css, 
+If you have the following css,
 
 ```css
 /* styles.css */
@@ -18,8 +20,10 @@ typed-css-modules creates the following .d.ts files from the above css:
 
 ```ts
 /* styles.css.d.ts */
-export const primary: string;
-export const myClass: string;
+declare class Styles {
+  myClass: string,
+}
+export default new Styles();
 ```
 
 So, you can import CSS modules' class or variable into your TypeScript sources:
@@ -31,13 +35,19 @@ console.log(`<div class="${styles.myClass}"></div>`);
 console.log(`<div style="color: ${styles.primary}"></div>`);
 ```
 
+You can also still programmatically generate accessors without getting errors.
+
+```
+console.log(`<div class="${styles[doSomethingProgrammatic()]}"></div>`);
+```
+
 ## CLI
 
 ```sh
 npm install -g typed-css-modules
 ```
 
-And exec `tcm <input directory>` command. 
+And exec `tcm <input directory>` command.
 For example, if you have .css files under `src` directory, exec the following:
 
 ```sh
@@ -97,7 +107,7 @@ import DtsCreator from 'typed-css-modules';
 let creator = new DtsCreator();
 creator.create('src/style.css').then(content => {
   console.log(content.tokens);          // ['myClass']
-  console.log(content.formatted);       // 'export const myClass: string;'
+  console.log(content.formatted);       // 'class Styles...'
   content.writeFile();                  // writes this content to "src/style.css.d.ts"
 });
 ```
@@ -132,7 +142,7 @@ An array of tokens retrieved from input CSS file.
 e.g. `['myClass']`
 
 #### `contents`
-An array of TypeScript definition expressions.
+An array of members of the styles class for this module.
 e.g. `['export const myClass: string;']`.
 
 #### `formatted`
@@ -174,8 +184,6 @@ If your input CSS file has the followng class names, these invalid tokens are no
 
 ## Example
 There is a minimum example in this repository `example` folder. Clone this repository and run `cd example; npm i; npm start`.
-
-Or please see [https://github.com/Quramy/typescript-css-modules-demo](https://github.com/Quramy/typescript-css-modules-demo). It's a working demonstration of CSS Modules with React and TypeScript.
 
 ## License
 This software is released under the MIT License, see LICENSE.txt.

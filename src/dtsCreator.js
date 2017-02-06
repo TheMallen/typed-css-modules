@@ -6,7 +6,7 @@ import path from'path';
 
 import isThere from 'is-there';
 import mkdirp from 'mkdirp';
-import camelcase from "camelcase"
+import camelcase from 'camelcase';
 
 import {TokenValidator} from './tokenValidator';
 import FileSystemLoader from './fileSystemLoader';
@@ -34,12 +34,20 @@ class DtsContent {
   }
 
   get contents() {
-    return this.resultList;
+    return this.resultList.map((key) => `${key}: string;`);
   }
 
   get formatted() {
-    if(!this.resultList || !this.resultList.length) return 'export default {};';
-    return this.resultList.join(os.EOL);
+    if(!this.contents || !this.contents.length) return 'export default {};';
+
+    return [
+      'type Styles = {',
+      this.contents.map((row) => ` ${row}`).join(os.EOL),
+      ' [key: string]: string;',
+      '}',
+      'declare const styles: Styles',
+      'export = styles',
+    ].join(os.EOL);
   }
 
   get tokens() {
@@ -61,9 +69,9 @@ class DtsContent {
     }
     return new Promise((resolve, reject) => {
       fs.writeFile(this.outputFilePath, this.formatted + os.EOL, 'utf8', (err) => {
-        if(err) {
+        if (err) {
           reject(err);
-        }else{
+        } else {
           resolve(this);
         }
       });
@@ -86,16 +94,16 @@ export class DtsCreator {
   create(filePath, initialContents, clearCache = false) {
     return new Promise((resolve, reject) => {
       var rInputPath;
-      if(path.isAbsolute(filePath)) {
+      if (path.isAbsolute(filePath)) {
         rInputPath = path.relative(this.inputDirectory, filePath);
-      }else{
+      } else {
         rInputPath = path.relative(this.inputDirectory, path.join(process.cwd(), filePath));
       }
-      if(clearCache) {
+      if (clearCache) {
         this.loader.tokensByFile = {};
       }
-      this.loader.fetch(filePath, "/", undefined, initialContents).then(res => {
-        if(res) {
+      this.loader.fetch(filePath, "/", undefined, initialContents).then((res) => {
+        if (res) {
           var tokens = res;
           var keys = Object.keys(tokens);
           var validKeys = [], invalidKeys = [];
@@ -104,30 +112,28 @@ export class DtsCreator {
           keys.forEach(key => {
             const convertedKey = this.camelCase ? camelcase(key) : key;
             var ret = validator.validate(convertedKey);
-            if(ret.isValid) {
+            if (ret.isValid) {
               validKeys.push(convertedKey);
-            }else{
+            } else {
               messageList.push(ret.message);
             }
           });
-
-          var result = validKeys.map(k => ('export const ' + k + ': string;'));
 
           var content = new DtsContent({
             rootDir: this.rootDir,
             searchDir: this.searchDir,
             outDir: this.outDir,
             rInputPath,
+            resultList: validKeys,
             rawTokenList: keys,
-            resultList: result,
             messageList
           });
 
           resolve(content);
-        }else{
+        } else {
           reject(res);
         }
-      }).catch(err => reject(err));
+      }).catch((err) => reject(err));
     });
   }
 }

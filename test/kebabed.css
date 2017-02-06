@@ -1,4 +1,9 @@
-.my-class {
+.myClass {
   color: red;
 }
-
+.my-other-class {
+  color: green;
+}
+.PascalClass {
+  color: blue;
+}
