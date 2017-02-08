@@ -1,4 +1,4 @@
-# friendly-typed-css-modules
+# friendly-typed-css-modules [![Build Status](https://travis-ci.org/TheMallen/typed-css-modules.svg?branch=master)](https://travis-ci.org/TheMallen/typed-css-modules)
 This is a fork of [Typed-CSS-Modules](https://github.com/Quramy/typed-css-modules), aimed at providing some nicer functionality
 for usign programmatic class names against your typed css.
 
