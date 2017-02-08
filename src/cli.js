@@ -22,19 +22,19 @@ const yarg = yargs.usage('Create .css.d.ts from CSS modules *.css files.\nUsage:
   .alias('w', 'watch').describe('w', 'Watch input directory\'s css files or pattern').boolean('w')
   .alias('h', 'help').help('h')
   .version(() => require('../package.json').version)
-const argv = yarg.argv;
+const consoleArguments = yarg.argv;
 let creator;
 
 function main() {
-  if(argv.h) {
+  if(consoleArguments.h) {
     yarg.showHelp();
     return;
   }
 
   let searchDir;
-  if (argv._ && argv._[0]) {
-    searchDir = argv._[0];
-  } else if(argv.p) {
+  if (consoleArguments._ && consoleArguments._[0]) {
+    searchDir = consoleArguments._[0];
+  } else if(consoleArguments.p) {
     searchDir = './';
   } else {
     yarg.showHelp();
@@ -42,15 +42,15 @@ function main() {
   }
 
   const extension = agrv.e || '.css'
-  const filesPattern = path.join(searchDir, argv.p || `**/*${extension}`);
+  const filesPattern = path.join(searchDir, consoleArguments.p || `**/*${extension}`);
   creator = new DtsCreator({
     searchDir,
     rootDir: process.cwd(),
-    outDir: argv.o,
-    camelCase: argv.c
+    outDir: consoleArguments.o,
+    camelCase: consoleArguments.c
   });
 
-  if (argv.w) {
+  if (consoleArguments.w) {
     console.log('Watch ' + filesPattern + '...');
     return gaze(filesPattern, function(err, files) {
       this.on('changed', writeFile);
@@ -70,7 +70,7 @@ function main() {
 }
 
 function writeFile(file) {
-  return creator.create(file, null, !!argv.w)
+  return creator.create(file, null, Boolean(consoleArguments.w))
     .then(content => content.writeFile())
     .then(content => {
       console.log('Wrote ' + chalk.green(content.outputFilePath));
