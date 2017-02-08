@@ -25,25 +25,13 @@ const yarg = yargs.usage('Create .css.d.ts from CSS modules *.css files.\nUsage:
 const argv = yarg.argv;
 let creator;
 
-function writeFile(file) {
-  creator.create(file, null, !!argv.w)
-  .then(content => content.writeFile())
-  .then(content => {
-    console.log('Wrote ' + chalk.green(content.outputFilePath));
-    content.messageList.forEach(message => {
-      console.warn(chalk.yellow('[Warn] ' + message));
-    });
-  })
-  .catch(reason => console.error(chalk.red('[Error] ' + reason)));
-};
-
 function main() {
-  let rootDir, searchDir;
   if(argv.h) {
     yarg.showHelp();
     return;
   }
 
+  let searchDir;
   if (argv._ && argv._[0]) {
     searchDir = argv._[0];
   } else if(argv.p) {
@@ -52,28 +40,46 @@ function main() {
     yarg.showHelp();
     return;
   }
+
   const extension = agrv.e || '.css'
   const filesPattern = path.join(searchDir, argv.p || `**/*${extension}`);
-  rootDir = process.cwd();
-  creator = new DtsCreator({rootDir, searchDir, outDir: argv.o, camelCase: argv.c});
+  creator = new DtsCreator({
+    searchDir,
+    rootDir: process.cwd(),
+    outDir: argv.o,
+    camelCase: argv.c
+  });
 
-  if (!argv.w) {
-    glob(filesPattern, null, (err, files) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (!files || !files.length) return;
-      files.forEach(writeFile);
-    });
-  } else {
+  if (argv.w) {
     console.log('Watch ' + filesPattern + '...');
-    gaze(filesPattern, function(err, files) {
+    return gaze(filesPattern, function(err, files) {
       this.on('changed', writeFile);
       this.on('added', writeFile);
     });
   }
-};
+
+  return glob(filesPattern, null, (err, files) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    if (files && files.length) {
+      files.forEach(writeFile);
+    }
+  });
+}
+
+function writeFile(file) {
+  return creator.create(file, null, !!argv.w)
+    .then(content => content.writeFile())
+    .then(content => {
+      console.log('Wrote ' + chalk.green(content.outputFilePath));
+      content.messageList.forEach(message => {
+        console.warn(chalk.yellow('[Warn] ' + message));
+      });
+    })
+    .catch(reason => console.error(chalk.red('[Error] ' + reason)));
+}
 
 main();
 
