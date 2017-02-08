@@ -41,7 +41,7 @@ function main() {
     return;
   }
 
-  const extension = agrv.e || '.css'
+  const extension = consoleArguments.e || '.css'
   const filesPattern = path.join(searchDir, consoleArguments.p || `**/*${extension}`);
   creator = new DtsCreator({
     searchDir,
