@@ -20,10 +20,11 @@ typed-css-modules creates the following .d.ts files from the above css:
 
 ```ts
 /* styles.css.d.ts */
-declare class Styles {
+type Styles = {
   myClass: string,
 }
-export default new Styles();
+const styles: Styles;
+export = styles;
 ```
 
 So, you can import CSS modules' class or variable into your TypeScript sources:
@@ -44,14 +45,14 @@ console.log(`<div class="${styles[doSomethingProgrammatic()]}"></div>`);
 ## CLI
 
 ```sh
-npm install -g typed-css-modules
+npm install -g friendly-typed-css-modules
 ```
 
-And exec `tcm <input directory>` command.
+And exec `ftcm <input directory>` command.
 For example, if you have .css files under `src` directory, exec the following:
 
 ```sh
-tcm src
+ftcm src
 ```
 
 Then, this creates `*.css.d.ts` files under the directory which has original .css file.
@@ -69,7 +70,7 @@ Use `-o` or `--outDir` option.
 For example:
 
 ```sh
-tcm -o dist src
+ftcm -o dist src
 ```
 
 ```text
@@ -86,7 +87,7 @@ By the default, this tool searches `**/*.css` files under `<input directory>`.
 If you can customize glob pattern, you can use `--pattern` or `-p` option.
 
 ```sh
-tcm -p src/**/*.icss
+ftcm -p src/**/*.icss
 ```
 
 #### watch
@@ -122,6 +123,7 @@ You can set the following options:
 * `option.searchDir`: Directory which includes target `*.css` files(default: `'./'`).
 * `option.outDir`: Output directory(default: `option.searchDir`).
 * `option.camelCase`: Camelize CSS class tokens.
+* `option.allowGenericStringAccess`: Allow access to the styles object via generic string accessors (eg. `styles[someVariable];`)
 
 #### `create(filepath, contents) => Promise(dtsContent)`
 Returns `DtsContent` instance.
@@ -143,7 +145,7 @@ e.g. `['myClass']`
 
 #### `contents`
 An array of members of the styles class for this module.
-e.g. `['export const myClass: string;']`.
+e.g. `['myClass: string;']`.
 
 #### `formatted`
 A string of TypeScript definition expression.
