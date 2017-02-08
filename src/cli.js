@@ -9,23 +9,24 @@ import yargs from 'yargs';
 import chalk from 'chalk';
 import {DtsCreator} from './dtsCreator';
 
-let yarg = yargs.usage('Create .css.d.ts from CSS modules *.css files.\nUsage: $0 [options] <input directory>')
+const yarg = yargs.usage('Create .css.d.ts from CSS modules *.css files.\nUsage: $0 [options] <input directory>')
   .example('$0 src/styles')
   .example('$0 src -o dist')
   .example('$0 -p styles/**/*.icss -w')
   .detectLocale(false)
   .demand(['_'])
   .alias('c', 'camelCase').describe('c', 'Convert CSS class tokens to camelcase').boolean('c')
+  .alias('e', 'extension').describe('e', 'Search for files with the given extension')
   .alias('o', 'outDir').describe('o', 'Output directory')
   .alias('p', 'pattern').describe('p', 'Glob pattern with css files')
   .alias('w', 'watch').describe('w', 'Watch input directory\'s css files or pattern').boolean('w')
   .alias('h', 'help').help('h')
   .version(() => require('../package.json').version)
-let argv = yarg.argv;
+const argv = yarg.argv;
 let creator;
 
-let writeFile = f => {
-  creator.create(f, null, !!argv.w)
+function writeFile(file) {
+  creator.create(file, null, !!argv.w)
   .then(content => content.writeFile())
   .then(content => {
     console.log('Wrote ' + chalk.green(content.outputFilePath));
@@ -36,7 +37,7 @@ let writeFile = f => {
   .catch(reason => console.error(chalk.red('[Error] ' + reason)));
 };
 
-let main = () => {
+function main() {
   let rootDir, searchDir;
   if(argv.h) {
     yarg.showHelp();
@@ -51,7 +52,8 @@ let main = () => {
     yarg.showHelp();
     return;
   }
-  let filesPattern = path.join(searchDir, argv.p || '**/*.css');
+  const extension = agrv.e || '.css'
+  const filesPattern = path.join(searchDir, argv.p || `**/*${extension}`);
   rootDir = process.cwd();
   creator = new DtsCreator({rootDir, searchDir, outDir: argv.o, camelCase: argv.c});
 
