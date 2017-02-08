@@ -15,6 +15,7 @@ const yarg = yargs.usage('Create .css.d.ts from CSS modules *.css files.\nUsage:
   .example('$0 -p styles/**/*.icss -w')
   .detectLocale(false)
   .demand(['_'])
+  .alias('a', 'allowGenericStringAccess').describe('a', 'Include generic string accessor in output').boolean('a')
   .alias('c', 'camelCase').describe('c', 'Convert CSS class tokens to camelcase').boolean('c')
   .alias('e', 'extension').describe('e', 'Search for files with the given extension')
   .alias('o', 'outDir').describe('o', 'Output directory')
@@ -47,7 +48,8 @@ function main() {
     searchDir,
     rootDir: process.cwd(),
     outDir: consoleArguments.o,
-    camelCase: consoleArguments.c
+    camelCase: consoleArguments.c,
+    allowGenericStringAccess: consoleArguments.a,
   });
 
   if (consoleArguments.w) {

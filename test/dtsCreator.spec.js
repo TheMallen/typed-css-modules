@@ -10,7 +10,6 @@ const cssOutput = [
   ' myClass: string;',
   ' myOtherClass: string;',
   ' PascalClass: string;',
-  ' [key: string]: string;',
   '}',
   'declare const styles: Styles',
   'export = styles',
@@ -19,6 +18,16 @@ const cssOutput = [
 const cssOutputSimple = [
   'type Styles = {',
   ' myClass: string;',
+  '}',
+  'declare const styles: Styles',
+  'export = styles',
+].join(os.EOL);
+
+const cssOutputWithGenericAccess = [
+  'type Styles = {',
+  ' myClass: string;',
+  ' myOtherClass: string;',
+  ' PascalClass: string;',
   ' [key: string]: string;',
   '}',
   'declare const styles: Styles',
@@ -30,7 +39,6 @@ const cssOutputCamelized = [
   ' myClass: string;',
   ' myOtherClass: string;',
   ' pascalClass: string;',
-  ' [key: string]: string;',
   '}',
   'declare const styles: Styles',
   'export = styles',
@@ -85,7 +93,7 @@ describe('DtsContent', () => {
     it('returns original tokens', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
-        .then(content => {
+        .then((content) => {
           assert.equal(content.tokens[0], "myClass");
         });
     });
@@ -95,7 +103,7 @@ describe('DtsContent', () => {
     it('returns original CSS file name', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
-        .then(content => {
+        .then((content) => {
           assert.equal(path.relative(process.cwd(), content.inputFilePath), "test/testStyle.css");
         });
     });
@@ -105,7 +113,7 @@ describe('DtsContent', () => {
     it('returns formatted .d.ts string', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
-        .then(content => {
+        .then((content) => {
           assert.equal(content.formatted, cssOutput);
         });
     });
@@ -113,7 +121,7 @@ describe('DtsContent', () => {
     it('returns empty object exportion when the result list has no items', () => {
       return new DtsCreator()
         .create('test/empty.css')
-        .then(content => {
+        .then((content) => {
           assert.equal(content.formatted, "export default {};");
         });
     });
@@ -121,11 +129,16 @@ describe('DtsContent', () => {
     it('returns camelized tokens when the camelCase option is set', () => {
       return new DtsCreator({camelCase: true})
         .create('test/kebabed.css')
-        .then(content => {
-          console.log(content.tokens);
-          console.log(content.resultList);
-          console.log(content.contents);
+        .then((content) => {
           assert.equal(content.formatted, cssOutputCamelized);
+        });
+    });
+
+    it('returns content with generic string key access when the allowGenericStringAccess option is set', () => {
+      return new DtsCreator({allowGenericStringAccess: true})
+        .create('test/testStyle.css')
+        .then((content) => {
+          assert.equal(content.formatted, cssOutputWithGenericAccess);
         });
     });
   });
@@ -134,7 +147,7 @@ describe('DtsContent', () => {
     it('writes a file', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
-        .then(content => {
+        .then((content) => {
           return content.writeFile();
         });
     });
