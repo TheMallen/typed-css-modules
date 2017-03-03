@@ -1,9 +1,8 @@
-'use strict';
-
-var gulp = require('gulp');
-var babel = require('gulp-babel');
-var plumber = require('gulp-plumber');
-var mocha = require('gulp-mocha');
+/* global require */
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+const plumber = require('gulp-plumber');
+const mocha = require('gulp-mocha');
 
 gulp.task('compile', () => {
   return gulp.src('src/**/*.js')
@@ -20,6 +19,5 @@ gulp.task('watch', () => {
 
 gulp.task('test', () => {
   return gulp.src('test/**/*.spec.js')
-    .pipe(mocha({reporter: 'spec'}))
-    ;
+    .pipe(mocha({reporter: 'spec'}));
 });

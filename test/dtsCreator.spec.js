@@ -86,11 +86,9 @@ describe('DtsCreator', () => {
         });
     });
   });
-
 });
 
 describe('DtsContent', () => {
-
   describe('#tokens', () => {
     it('returns original tokens', () => {
       return new DtsCreator()
@@ -157,5 +155,4 @@ describe('DtsContent', () => {
         });
     });
   });
-
 });
