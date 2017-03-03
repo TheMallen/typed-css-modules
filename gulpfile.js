@@ -17,7 +17,7 @@ gulp.task('watch', () => {
   gulp.watch(['lib/**/*.js', 'test/**/*.spec.js', 'test/**/*.css'], ['test']);
 });
 
-gulp.task('test', () => {
+gulp.task('test', ['compile'], () => {
   return gulp.src('test/**/*.spec.js')
     .pipe(mocha({reporter: 'spec'}));
 });
