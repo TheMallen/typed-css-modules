@@ -1,4 +1,8 @@
-/* global describe, it, require, process*/
+/* global require, describe, it, process */
+/* eslint-disable strict */
+
+'use strict';
+
 const path = require('path');
 const os = require('os');
 const assert = require('assert');
@@ -79,16 +83,15 @@ describe('DtsCreator', () => {
       return new DtsCreator({searchDir: 'test', outDir: 'dist'})
         .create('test/testStyle.css')
         .then((content) => {
-          return assert.equal(
-            path.relative(process.cwd(), content.outputFilePath),
-            'dist/testStyle.css.d.ts'
-          );
+          return assert.equal(path.relative(process.cwd(), content.outputFilePath), 'dist/testStyle.css.d.ts');
         });
     });
   });
+
 });
 
 describe('DtsContent', () => {
+
   describe('#tokens', () => {
     it('returns original tokens', () => {
       return new DtsCreator()
@@ -104,10 +107,7 @@ describe('DtsContent', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
         .then((content) => {
-          return assert.equal(
-            path.relative(process.cwd(), content.inputFilePath),
-            'test/testStyle.css',
-          );
+          return assert.equal(path.relative(process.cwd(), content.inputFilePath), 'test/testStyle.css');
         });
     });
   });
@@ -155,4 +155,5 @@ describe('DtsContent', () => {
         });
     });
   });
+
 });
