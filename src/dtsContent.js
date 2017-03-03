@@ -1,8 +1,6 @@
-'use strict';
-
 import fs from 'fs';
 import os from 'os';
-import path from'path';
+import path from 'path';
 
 import isThere from 'is-there';
 import mkdirp from 'mkdirp';
@@ -33,12 +31,14 @@ export default class DtsContent {
   }
 
   get formatted() {
-    if(!this.contents || !this.contents.length) return 'export default {};';
+    if (!this.contents || !this.contents.length) {
+      return 'export default {};';
+    }
 
     const lines = [
       'type Styles = {',
       this.contents.map((row) => ` ${row}`).join(os.EOL),
-    ]
+    ];
 
     if (this.allowGenericStringAccess) {
       lines.push(' [key: string]: string;');
@@ -56,7 +56,7 @@ export default class DtsContent {
   }
 
   get outputFilePath() {
-    return path.join(this.rootDir, this.outDir, this.rInputPath + '.d.ts');
+    return path.join(this.rootDir, this.outDir, `${this.rInputPath}.d.ts`);
   }
 
   get inputFilePath() {
@@ -64,17 +64,18 @@ export default class DtsContent {
   }
 
   writeFile() {
-    var outPathDir = path.dirname(this.outputFilePath);
-    if(!isThere(outPathDir)) {
+    const outPathDir = path.dirname(this.outputFilePath);
+    if (!isThere(outPathDir)) {
       mkdirp.sync(outPathDir);
     }
+
     return new Promise((resolve, reject) => {
       fs.writeFile(this.outputFilePath, this.formatted + os.EOL, 'utf8', (err) => {
         if (err) {
-          reject(err);
-        } else {
-          resolve(this);
+          return reject(err);
         }
+
+        return resolve(this);
       });
     });
   }

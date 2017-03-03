@@ -1,9 +1,8 @@
-'use strict';
-
-var path = require('path');
-var os = require('os');
-var assert = require('assert');
-var DtsCreator = require('../lib/dtsCreator').DtsCreator;
+/* global describe, it, require, process*/
+const path = require('path');
+const os = require('os');
+const assert = require('assert');
+const DtsCreator = require('../lib/dtsCreator').DtsCreator;
 
 const cssOutput = [
   'type Styles = {',
@@ -46,21 +45,21 @@ const cssOutputCamelized = [
 
 
 describe('DtsCreator', () => {
-  var creator = new DtsCreator();
+  const creator = new DtsCreator();
 
   describe('#create', () => {
     it('returns DtsContent instance simple css', () => {
       return creator.create('test/testStyle.css')
         .then((content) => {
-          assert.equal(content.formatted, cssOutput);
+          return assert.equal(content.formatted, cssOutput);
         });
     });
 
     it('rejects an error with invalid CSS', () => {
       return creator
         .create('test/errorCss.css')
-        .then((content) => {
-          assert.fail();
+        .then(() => {
+          return assert.fail();
         })
         .catch((err) => {
           assert.equal(err.name, 'CssSyntaxError');
@@ -68,19 +67,22 @@ describe('DtsCreator', () => {
     });
 
     it('returns DtsContent instance from the pair of path and contents', () => {
-      return creator.create('test/somePath', `.myClass { color: red }`)
+      return creator.create('test/somePath', '.myClass { color: red }')
         .then((content) => {
-          assert.equal(content.formatted, cssOutputSimple);
+          return assert.equal(content.formatted, cssOutputSimple);
         });
     });
   });
 
   describe('#modify path', () => {
     it('can be set outDir', () => {
-      return new DtsCreator({searchDir: "test", outDir: "dist"})
+      return new DtsCreator({searchDir: 'test', outDir: 'dist'})
         .create('test/testStyle.css')
         .then((content) => {
-          assert.equal(path.relative(process.cwd(), content.outputFilePath), "dist/testStyle.css.d.ts");
+          return assert.equal(
+            path.relative(process.cwd(), content.outputFilePath),
+            'dist/testStyle.css.d.ts'
+          );
         });
     });
   });
@@ -94,7 +96,7 @@ describe('DtsContent', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
         .then((content) => {
-          assert.equal(content.tokens[0], "myClass");
+          return assert.equal(content.tokens[0], 'myClass');
         });
     });
   });
@@ -104,7 +106,10 @@ describe('DtsContent', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
         .then((content) => {
-          assert.equal(path.relative(process.cwd(), content.inputFilePath), "test/testStyle.css");
+          return assert.equal(
+            path.relative(process.cwd(), content.inputFilePath),
+            'test/testStyle.css',
+          );
         });
     });
   });
@@ -114,7 +119,7 @@ describe('DtsContent', () => {
       return new DtsCreator()
         .create('test/testStyle.css')
         .then((content) => {
-          assert.equal(content.formatted, cssOutput);
+          return assert.equal(content.formatted, cssOutput);
         });
     });
 
@@ -122,7 +127,7 @@ describe('DtsContent', () => {
       return new DtsCreator()
         .create('test/empty.css')
         .then((content) => {
-          assert.equal(content.formatted, "export default {};");
+          return assert.equal(content.formatted, 'export default {};');
         });
     });
 
@@ -130,7 +135,7 @@ describe('DtsContent', () => {
       return new DtsCreator({camelCase: true})
         .create('test/kebabed.css')
         .then((content) => {
-          assert.equal(content.formatted, cssOutputCamelized);
+          return assert.equal(content.formatted, cssOutputCamelized);
         });
     });
 
@@ -138,7 +143,7 @@ describe('DtsContent', () => {
       return new DtsCreator({allowGenericStringAccess: true})
         .create('test/testStyle.css')
         .then((content) => {
-          assert.equal(content.formatted, cssOutputWithGenericAccess);
+          return assert.equal(content.formatted, cssOutputWithGenericAccess);
         });
     });
   });
