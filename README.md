@@ -20,7 +20,7 @@ typed-css-modules creates the following .d.ts files from the above css:
 
 ```ts
 /* styles.css.d.ts */
-type Styles = {
+interface Styles {
   myClass: string,
 }
 const styles: Styles;

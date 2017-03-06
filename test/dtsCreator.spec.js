@@ -9,42 +9,42 @@ const assert = require('assert');
 const DtsCreator = require('../lib/dtsCreator').DtsCreator;
 
 const cssOutput = [
-  'type Styles = {',
-  ' myClass: string;',
-  ' myOtherClass: string;',
-  ' PascalClass: string;',
+  'interface Styles {',
+  ' myClass: string,',
+  ' myOtherClass: string,',
+  ' PascalClass: string,',
   '}',
-  'declare const styles: Styles',
-  'export = styles',
+  'declare const styles: Styles;',
+  'export = styles;',
 ].join(os.EOL);
 
 const cssOutputSimple = [
-  'type Styles = {',
-  ' myClass: string;',
+  'interface Styles {',
+  ' myClass: string,',
   '}',
-  'declare const styles: Styles',
-  'export = styles',
+  'declare const styles: Styles;',
+  'export = styles;',
 ].join(os.EOL);
 
 const cssOutputWithGenericAccess = [
-  'type Styles = {',
-  ' myClass: string;',
-  ' myOtherClass: string;',
-  ' PascalClass: string;',
-  ' [key: string]: string;',
+  'interface Styles {',
+  ' myClass: string,',
+  ' myOtherClass: string,',
+  ' PascalClass: string,',
+  ' [key: string]: string,',
   '}',
-  'declare const styles: Styles',
-  'export = styles',
+  'declare const styles: Styles;',
+  'export = styles;',
 ].join(os.EOL);
 
 const cssOutputCamelized = [
-  'type Styles = {',
-  ' myClass: string;',
-  ' myOtherClass: string;',
-  ' pascalClass: string;',
+  'interface Styles {',
+  ' myClass: string,',
+  ' myOtherClass: string,',
+  ' pascalClass: string,',
   '}',
-  'declare const styles: Styles',
-  'export = styles',
+  'declare const styles: Styles;',
+  'export = styles;',
 ].join(os.EOL);
 
 

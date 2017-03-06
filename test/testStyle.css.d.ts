@@ -1,7 +1,7 @@
-type Styles = {
- myClass: string;
- myOtherClass: string;
- PascalClass: string;
+interface Styles {
+ myClass: string,
+ myOtherClass: string,
+ PascalClass: string,
 }
-declare const styles: Styles
-export = styles
+declare const styles: Styles;
+export = styles;

@@ -27,7 +27,7 @@ export default class DtsContent {
   }
 
   get contents() {
-    return this.resultList.map((key) => `${key}: string;`);
+    return this.resultList.map((key) => `${key}: string,`);
   }
 
   get formatted() {
@@ -36,18 +36,18 @@ export default class DtsContent {
     }
 
     const lines = [
-      'type Styles = {',
+      'interface Styles {',
       this.contents.map((row) => ` ${row}`).join(os.EOL),
     ];
 
     if (this.allowGenericStringAccess) {
-      lines.push(' [key: string]: string;');
+      lines.push(' [key: string]: string,');
     }
 
     return lines.concat([
       '}',
-      'declare const styles: Styles',
-      'export = styles',
+      'declare const styles: Styles;',
+      'export = styles;',
     ]).join(os.EOL);
   }
 
