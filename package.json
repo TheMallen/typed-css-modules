@@ -1,6 +1,6 @@
 {
   "name": "friendly-typed-css-modules",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "Creates .d.ts files from CSS Modules .css files",
   "main": "index.js",
   "scripts": {
