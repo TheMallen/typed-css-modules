@@ -52,8 +52,15 @@ describe('DtsCreator', () => {
   const creator = new DtsCreator();
 
   describe('#create', () => {
-    it('returns DtsContent instance simple css', () => {
+    it('returns DtsContent instance for simple css', () => {
       return creator.create('test/testStyle.css')
+        .then((content) => {
+          return assert.equal(content.formatted, cssOutput);
+        });
+    });
+
+    it('returns DtsContent instance for scss', () => {
+      return creator.create('test/scssSyntax.scss')
         .then((content) => {
           return assert.equal(content.formatted, cssOutput);
         });
@@ -66,7 +73,7 @@ describe('DtsCreator', () => {
           return assert.fail();
         })
         .catch((err) => {
-          assert.equal(err.name, 'CssSyntaxError');
+          assert.equal(err.name, 'Error');
         });
     });
 

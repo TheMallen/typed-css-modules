@@ -4,6 +4,7 @@
 import Core from 'css-modules-loader-core';
 import fs from 'fs';
 import path from 'path';
+import sass from 'node-sass';
 
 function traceKeySorter(first, second) {
   if (first.length < second.length) {
@@ -58,23 +59,14 @@ export default class FileSystemLoader {
         return resolve(tokens);
       }
 
-      return fs.readFile(fileRelativePath, 'utf-8', (err, source) => {
-        if (err && relativeTo && relativeTo !== '/') {
-          return resolve([]);
-        }
-
-        if (err && (!relativeTo || relativeTo === '/')) {
-          return reject(err);
-        }
-
-        return this.core.load(source, rootRelativePath, trace, this.fetch.bind(this))
-          .then(({injectableSource, exportTokens}) => {
-            this.sources[trace] = injectableSource;
-            this.tokensByFile[fileRelativePath] = exportTokens;
-            return resolve(exportTokens);
-          })
-          .catch(reject);
-      });
+      getSource(fileRelativePath, relativeTo)
+        .then((source) => this.core.load(source, rootRelativePath, trace, this.fetch.bind(this)))
+        .then(({injectableSource, exportTokens}) => {
+          this.sources[trace] = injectableSource;
+          this.tokensByFile[fileRelativePath] = exportTokens;
+          return resolve(exportTokens);
+        })
+        .catch(reject);
     });
   }
 
@@ -87,4 +79,20 @@ export default class FileSystemLoader {
     this.tokensByFile = {};
     return this;
   }
+}
+
+function getSource(file, relativeTo) {
+  return new Promise((resolve, reject) => {
+    sass.render({file}, (err, result) => {
+      if (err && relativeTo && relativeTo !== '/') {
+        return resolve([]);
+      }
+
+      if (err && (!relativeTo || relativeTo === '/')) {
+        return reject(err);
+      }
+
+      resolve(result.css.toString());
+    });
+  });
 }
