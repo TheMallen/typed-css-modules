@@ -4,6 +4,7 @@
   "description": "Creates .d.ts files from CSS Modules .css files",
   "main": "index.js",
   "scripts": {
+    "prepublish": "yarn run build",
     "build": "gulp compile",
     "test": "gulp test"
   },
