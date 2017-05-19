@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 /* this file is forked from https://raw.githubusercontent.com/css-modules/css-modules-loader-core/master/src/file-system-loader.js */
 import Core from 'css-modules-loader-core';
-import fs from 'fs';
 import path from 'path';
 import sass from 'node-sass';
 
