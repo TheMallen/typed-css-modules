@@ -1,5 +1,12 @@
-$cool-color: green;
+$blue: blue;
+$spacing: 1px;
 
-.class {
-  color: $cool-color;
+.myClass {color: red;}
+// foo
+.myOtherClass {color: $blue;}
+.PascalClass {color: green;}
+
+@mixin foo {
+  color: red;
+  margin: -#{$spacing};
 }

@@ -28,6 +28,7 @@
     "glob": "^6.0.4",
     "is-there": "^4.3.1",
     "mkdirp": "^0.5.1",
+    "node-sass": "^4.5.3",
     "yargs": "^3.32.0"
   },
   "devDependencies": {
